@@ -1,11 +1,11 @@
 blueprint:
-  name: Ikea STYRBAR automation light
+  name: IKEA STYRBAR
   description: Turn a light on/off - increase/decrease brightness - set color and temperature
   domain: automation
   source_url: https://github.com/CraigGardener/home-assistant-blueprints/blob/main/ikea-styrbar.yaml
   input:
     remote:
-      name: Ikea STYRBAR 2001/2002
+      name: IKEA STYRBAR 2001/2002
       description: This remote device will manage the light.
       selector:
         entity:
