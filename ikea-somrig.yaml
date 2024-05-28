@@ -18,7 +18,7 @@ blueprint:
   
   domain: automation
   input:
-    remote:
+    remote_name:
       name: IKEA SOMRIG
       description: Select the remote to use with this automation.
       selector:
@@ -91,7 +91,7 @@ mode: single
 max_exceeded: silent
 trigger_variables:
   z2m_base_topic: !input base_topic
-  z2m_controller: !input remote
+  z2m_controller: !input remote_name
 trigger:
   - platform: mqtt
     topic: "{{ z2m_base_topic ~ '/' ~ z2m_controller ~ '/action' }}"
@@ -128,7 +128,7 @@ trigger:
 action:
   - variables:
       z2m_base_topic: !input base_topic
-      z2m_controller: !input remote
+      z2m_controller: !input remote_name
   - choose:
       - conditions:
           - condition: trigger
