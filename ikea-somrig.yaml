@@ -128,7 +128,7 @@ trigger:
 action:
   - variables:
       z2m_base_topic: !input base_topic
-      z2m_controller: !input remote_name
+      z2m_controller: !input remote
   - choose:
       - conditions:
           - condition: trigger
