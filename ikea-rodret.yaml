@@ -119,7 +119,7 @@ trigger:
 action:
   - variables:
       z2m_base_topic: !input base_topic
-      z2m_device: !input remote
+      z2m_device: !input device
   - choose:
       - conditions:
           - condition: trigger
