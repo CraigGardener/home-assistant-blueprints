@@ -32,6 +32,10 @@ blueprint:
             integration: mqtt
             manufacturer: IKEA
             model: SOMRIG shortcut button (E2213)
+    device_name:
+      name: Device Name
+      description: Copy the name of the device from above.
+      default: ""
     base_topic:
       name: MQTT topic
       description: The topic configured in [Z2M addon](https://www.zigbee2mqtt.io/guide/usage/mqtt_topics_and_messages.html).
@@ -99,46 +103,47 @@ blueprint:
           mode: slider
 
 
-mode: single
+mode: queued
 max_exceeded: silent
 
 
 trigger_variables:
   z2m_base_topic: !input base_topic
   z2m_device: !input device
+  z2m_device_name: !input device_name
 
 
 trigger:
   - platform: mqtt
-    topic: "{{ z2m_base_topic ~ '/' ~ z2m_device ~ '/action' }}"
+    topic: "{{ z2m_base_topic ~ '/' ~ z2m_device_name ~ '/action' }}"
     payload: "1_short_release"
     id: press-button-1
   - platform: mqtt
-    topic: "{{ z2m_base_topic ~ '/' ~ z2m_device ~ '/action' }}"
+    topic: "{{ z2m_base_topic ~ '/' ~ z2m_device_name ~ '/action' }}"
     payload: "2_short_release"
     id: press-button-2
   - platform: mqtt
-    topic: "{{ z2m_base_topic ~ '/' ~ z2m_device ~ '/action' }}"
+    topic: "{{ z2m_base_topic ~ '/' ~ z2m_device_name ~ '/action' }}"
     payload: "1_double_press"
     id: double-press-button-1
   - platform: mqtt
-    topic: "{{ z2m_base_topic ~ '/' ~ z2m_device ~ '/action' }}"
+    topic: "{{ z2m_base_topic ~ '/' ~ z2m_device_name ~ '/action' }}"
     payload: "2_double_press"
     id: double-press-button-2
   - platform: mqtt
-    topic: "{{ z2m_base_topic ~ '/' ~ z2m_device ~ '/action' }}"
+    topic: "{{ z2m_base_topic ~ '/' ~ z2m_device_name ~ '/action' }}"
     payload: "1_long_press"
     id: hold-button-1
   - platform: mqtt
-    topic: "{{ z2m_base_topic ~ '/' ~ z2m_device ~ '/action' }}"
+    topic: "{{ z2m_base_topic ~ '/' ~ z2m_device_name ~ '/action' }}"
     payload: "2_long_press"
     id: hold-button-2
   - platform: mqtt
-    topic: "{{ z2m_base_topic ~ '/' ~ z2m_device ~ '/action' }}"
+    topic: "{{ z2m_base_topic ~ '/' ~ z2m_device_name ~ '/action' }}"
     payload: "1_long_release"
     id: release-button-1
   - platform: mqtt
-    topic: "{{ z2m_base_topic ~ '/' ~ z2m_device ~ '/action' }}"
+    topic: "{{ z2m_base_topic ~ '/' ~ z2m_device_name ~ '/action' }}"
     payload: "2_long_release"
     id: release-button-2
 
@@ -147,6 +152,7 @@ action:
   - variables:
       z2m_base_topic: !input base_topic
       z2m_device: !input device
+      z2m_device_name: !input device_name
   - choose:
       - conditions:
           - condition: trigger
@@ -187,7 +193,7 @@ action:
                               sequence:
                                 - wait_for_trigger:
                                     - platform: mqtt
-                                      topic: "{{ z2m_base_topic ~ '/' ~ z2m_device ~ '/action' }}"
+                                      topic: "{{ z2m_base_topic ~ '/' ~ z2m_device_name ~ '/action' }}"
                                       payload: "1_long_release"
                                   timeout:
                                     milliseconds: !input helper_hold_delay
@@ -216,7 +222,7 @@ action:
                               sequence:
                                 - wait_for_trigger:
                                     - platform: mqtt
-                                      topic: "{{ z2m_base_topic ~ '/' ~ z2m_device ~ '/action' }}"
+                                      topic: "{{ z2m_base_topic ~ '/' ~ z2m_device_name ~ '/action' }}"
                                       payload: "2_long_release"
                                   timeout:
                                     milliseconds: !input helper_hold_delay

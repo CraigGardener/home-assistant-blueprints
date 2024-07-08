@@ -31,6 +31,10 @@ blueprint:
             integration: mqtt
             manufacturer: IKEA
             model: RODRET wireless dimmer/power switch (E2201)
+    device_name:
+      name: Device Name
+      description: Copy the name of the device from above.
+      default: ""
     base_topic:
       name: MQTT topic
       description: The topic configured in [Z2M addon](https://www.zigbee2mqtt.io/guide/usage/mqtt_topics_and_messages.html).
@@ -84,34 +88,35 @@ blueprint:
           mode: slider
 
 
-mode: single
+mode: queued
 max_exceeded: silent
 
 
 trigger_variables:
   z2m_base_topic: !input base_topic
   z2m_device: !input device
+  z2m_device_name: !input device_name
 
 
 trigger:
   - platform: mqtt
-    topic: "{{ z2m_base_topic ~ '/' ~z2m_device ~ '/action' }}"
+    topic: "{{ z2m_base_topic ~ '/' ~z2m_device_name ~ '/action' }}"
     payload: "on"
     id: press-on
   - platform: mqtt
-    topic: "{{ z2m_base_topic ~ '/' ~z2m_device ~ '/action' }}"
+    topic: "{{ z2m_base_topic ~ '/' ~z2m_device_name ~ '/action' }}"
     payload: "off"
     id: press-off
   - platform: mqtt
-    topic: "{{ z2m_base_topic ~ '/' ~z2m_device ~ '/action' }}"
+    topic: "{{ z2m_base_topic ~ '/' ~z2m_device_name ~ '/action' }}"
     payload: "brightness_move_up"
     id: hold-on
   - platform: mqtt
-    topic: "{{ z2m_base_topic ~ '/' ~z2m_device ~ '/action' }}"
+    topic: "{{ z2m_base_topic ~ '/' ~z2m_device_name ~ '/action' }}"
     payload: "brightness_move_down"
     id: hold-off
   - platform: mqtt
-    topic: "{{ z2m_base_topic ~ '/' ~z2m_device ~ '/action' }}"
+    topic: "{{ z2m_base_topic ~ '/' ~z2m_device_name ~ '/action' }}"
     payload: "brightness_stop"
     id: release
 
@@ -120,6 +125,7 @@ action:
   - variables:
       z2m_base_topic: !input base_topic
       z2m_device: !input device
+      z2m_device_name: !input device_name
   - choose:
       - conditions:
           - condition: trigger
@@ -150,7 +156,7 @@ action:
                               sequence:
                                 - wait_for_trigger:
                                     - platform: mqtt
-                                      topic: "{{ z2m_base_topic ~ '/' ~ z2m_device ~ '/action' }}"
+                                      topic: "{{ z2m_base_topic ~ '/' ~ z2m_device_name ~ '/action' }}"
                                       payload: "brightness_stop"
                                   timeout:
                                     milliseconds: !input helper_hold_delay
@@ -179,7 +185,7 @@ action:
                               sequence:
                                 - wait_for_trigger:
                                     - platform: mqtt
-                                      topic: "{{ z2m_base_topic ~ '/' ~ z2m_device ~ '/action' }}"
+                                      topic: "{{ z2m_base_topic ~ '/' ~ z2m_device_name ~ '/action' }}"
                                       payload: "brightness_stop"
                                   timeout:
                                     milliseconds: !input helper_hold_delay
